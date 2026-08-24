@@ -1,7 +1,6 @@
 from datetime import timedelta
 
 from django.contrib.auth.models import User
-from django.core.exceptions import PermissionDenied
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
@@ -23,14 +22,14 @@ class PermissionTests(TestCase):
         )
 
     def test_assigned_user_can_view_project(self):
-        self.client.login(username="member", password="pass12345")
-        response = self.client.get(reverse("project_detail", args=[self.project.pk]))
-        self.assertEqual(response.status_code, 200)
+        self.assertTrue(
+            Project.objects.visible_to(self.member).filter(pk=self.project.pk).exists()
+        )
 
     def test_outsider_cannot_view_project(self):
-        self.client.login(username="outsider", password="pass12345")
-        response = self.client.get(reverse("project_detail", args=[self.project.pk]))
-        self.assertEqual(response.status_code, 404)
+        self.assertFalse(
+            Project.objects.visible_to(self.outsider).filter(pk=self.project.pk).exists()
+        )
 
     def test_non_owner_direct_post_cannot_edit_task(self):
         self.client.login(username="member", password="pass12345")

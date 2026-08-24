@@ -8,6 +8,7 @@ A small multi-user task manager built for the Race Ai assignment. Users can crea
 - Django 5.1.4
 - MySQL 8.4
 - PyMySQL 1.1.1 as the Django MySQL driver
+- cryptography 43.0.3 for MySQL 8 password authentication through PyMySQL
 - Docker Compose for local MySQL
 
 ## Local Setup
@@ -31,6 +32,8 @@ A small multi-user task manager built for the Race Ai assignment. Users can crea
    ```bash
    docker compose up -d
    ```
+
+   The Compose setup grants the app user access to `task_manager` and to Django's `test_task_manager` database used by `manage.py test`.
 
 4. Run migrations.
 
