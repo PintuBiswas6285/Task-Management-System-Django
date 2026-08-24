@@ -8,7 +8,9 @@ class TaskQuerySet(models.QuerySet):
         if not user.is_authenticated:
             return self.none()
         return self.filter(
-            models.Q(project__owner=user) | models.Q(assigned_to=user)
+            models.Q(project__owner=user)
+            | models.Q(assigned_to=user)
+            | models.Q(project__tasks__assigned_to=user)
         ).distinct()
 
     def overdue(self):

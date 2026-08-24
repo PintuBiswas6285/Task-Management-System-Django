@@ -20,11 +20,34 @@ class PermissionTests(TestCase):
             assigned_to=self.member,
             due_date=timezone.localdate(),
         )
+        self.project_task = Task.objects.create(
+            title="Visible project task",
+            project=self.project,
+            assigned_to=None,
+            due_date=timezone.localdate(),
+        )
 
     def test_assigned_user_can_view_project(self):
         self.assertTrue(
             Project.objects.visible_to(self.member).filter(pk=self.project.pk).exists()
         )
+
+    def test_project_member_can_view_any_task_in_project(self):
+        self.assertTrue(
+            Task.objects.visible_to(self.member)
+            .filter(pk=self.project_task.pk)
+            .exists()
+        )
+
+    def test_project_member_can_comment_on_any_task_in_project(self):
+        self.client.login(username="member", password="pass12345")
+        response = self.client.post(
+            reverse("task_detail", args=[self.project_task.pk]),
+            {"body": "I can see this project task."},
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response["Location"], reverse("task_detail", args=[self.project_task.pk]))
+        self.assertEqual(self.project_task.comments.count(), 1)
 
     def test_outsider_cannot_view_project(self):
         self.assertFalse(
