@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}{% if task %}Edit task{% else %}New task{% endif %}{% endblock %}
+
+{% block content %}
+  <section class="panel narrow">
+    <h1>{% if task %}Edit task{% else %}New task{% endif %}</h1>
+    <p>Project: <a href="{% url 'project_detail' project.pk %}">{{ project.name }}</a></p>
+    <form method="post" class="stacked-form">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Save</button>
+    </form>
+  </section>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}{{ project.name }}{% endblock %}
+
+{% block content %}
+  <div class="page-title">
+    <div>
+      <h1>{{ project.name }}</h1>
+      <p>{{ project.description|default:"No description." }}</p>
+      <small>Owner: {{ project.owner.username }}</small>
+    </div>
+    {% if project.owner_id == request.user.id %}
+      <div class="actions">
+        <a class="button" href="{% url 'task_create' project.pk %}">New task</a>
+        <a class="button secondary" href="{% url 'project_update' project.pk %}">Edit</a>
+        <a class="button danger" href="{% url 'project_delete' project.pk %}">Delete</a>
+      </div>
+    {% endif %}
+  </div>
+
+  <section class="panel">
+    <h2>Status counts</h2>
+    <dl class="counts">
+      {% for row in status_counts %}
+        <div><dt>{{ row.status }}</dt><dd>{{ row.total }}</dd></div>
+      {% empty %}
+        <div><dt>No tasks</dt><dd>0</dd></div>
+      {% endfor %}
+    </dl>
+  </section>
+
+  <section>
+    <h2>Tasks</h2>
+    <ul class="task-list">
+      {% for task in tasks %}
+        <li>
+          <a href="{% url 'task_detail' task.pk %}">{{ task.title }}</a>
+          <span>{{ task.get_status_display }} · {{ task.get_priority_display }} priority</span>
+          <small>Assigned to {{ task.assigned_to.username|default:"nobody" }} · due {{ task.due_date }}</small>
+        </li>
+      {% empty %}
+        <li>No tasks yet.</li>
+      {% endfor %}
+    </ul>
+  </section>
+{% endblock %}

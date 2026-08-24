@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Projects{% endblock %}
+
+{% block content %}
+  <div class="page-title">
+    <div>
+      <h1>Projects</h1>
+      <p>Projects you own or have assigned tasks in.</p>
+    </div>
+    <a class="button" href="{% url 'project_create' %}">New project</a>
+  </div>
+
+  <div class="project-grid">
+    {% for project in projects %}
+      <article class="panel">
+        <h2><a href="{% url 'project_detail' project.pk %}">{{ project.name }}</a></h2>
+        <p>{{ project.description|default:"No description." }}</p>
+        <dl class="counts">
+          <div><dt>To Do</dt><dd>{{ project.todo_count }}</dd></div>
+          <div><dt>In Progress</dt><dd>{{ project.in_progress_count }}</dd></div>
+          <div><dt>Done</dt><dd>{{ project.done_count }}</dd></div>
+        </dl>
+        <small>Owner: {{ project.owner.username }}</small>
+      </article>
+    {% empty %}
+      <p>No visible projects yet.</p>
+    {% endfor %}
+  </div>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+  <div class="page-title">
+    <div>
+      <h1>My tasks</h1>
+      <p>Tasks assigned to {{ request.user.username }}, grouped by status.</p>
+    </div>
+    <a class="button" href="{% url 'project_create' %}">New project</a>
+  </div>
+
+  <section class="overdue">
+    <h2>Overdue</h2>
+    {% if overdue_tasks %}
+      <ul class="task-list compact">
+        {% for task in overdue_tasks %}
+          <li>
+            <a href="{% url 'task_detail' task.pk %}">{{ task.title }}</a>
+            <span>{{ task.project.name }} · due {{ task.due_date }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No overdue assigned tasks.</p>
+    {% endif %}
+  </section>
+
+  <section class="columns">
+    {% for status, group in grouped_tasks.items %}
+      <div class="column">
+        <h2>{{ group.label }}</h2>
+        {% if group.tasks %}
+          <ul class="task-list">
+            {% for task in group.tasks %}
+              <li>
+                <a href="{% url 'task_detail' task.pk %}">{{ task.title }}</a>
+                <span>{{ task.project.name }}</span>
+                <small>{{ task.get_priority_display }} priority · due {{ task.due_date }}</small>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p>No tasks.</p>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </section>
+{% endblock %}

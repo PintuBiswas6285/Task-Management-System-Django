@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}{{ task.title }}{% endblock %}
+
+{% block content %}
+  <div class="page-title">
+    <div>
+      <h1>{{ task.title }}</h1>
+      <p>
+        <a href="{% url 'project_detail' task.project.pk %}">{{ task.project.name }}</a>
+        · {{ task.get_status_display }}
+        · {{ task.get_priority_display }} priority
+        · due {{ task.due_date }}
+      </p>
+      <small>Assigned to {{ task.assigned_to.username|default:"nobody" }}</small>
+    </div>
+    {% if task.project.owner_id == request.user.id %}
+      <div class="actions">
+        <a class="button secondary" href="{% url 'task_update' task.pk %}">Edit</a>
+        <a class="button danger" href="{% url 'task_delete' task.pk %}">Delete</a>
+      </div>
+    {% endif %}
+  </div>
+
+  <section class="panel">
+    <h2>Comments</h2>
+    <ul class="comments">
+      {% for comment in task.comments.all %}
+        <li>
+          <p>{{ comment.body }}</p>
+          <small>{{ comment.author.username }} · {{ comment.created_at }}</small>
+        </li>
+      {% empty %}
+        <li>No comments yet.</li>
+      {% endfor %}
+    </ul>
+    <form method="post" class="stacked-form">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Comment</button>
+    </form>
+  </section>
+{% endblock %}
