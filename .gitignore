@@ -6,3 +6,10 @@ venv/
 db.sqlite3
 staticfiles/
 .pytest_cache/
+
+# Database dumps
+*.sql
+*.sql.gz
+
+# Docker/local database data
+mysql_data/
