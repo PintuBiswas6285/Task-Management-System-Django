@@ -16,7 +16,7 @@ A small multi-user task manager built for the Race Ai assignment. Users can crea
 1. Create a virtual environment and install dependencies.
 
    ```bash
-   python -m venv .venv
+   py -3.13 -m venv .venv
    .venv\Scripts\activate
    pip install -r requirements.txt
    ```
