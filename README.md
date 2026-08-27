@@ -4,7 +4,7 @@ A small multi-user task manager built for the Race Ai assignment. Users can crea
 
 ## Tech Stack
 
-- Python 3.12+ recommended
+- Python 3.14.7 recommended
 - Django 5.1.4
 - MySQL 8.4
 - PyMySQL 1.1.1 as the Django MySQL driver
